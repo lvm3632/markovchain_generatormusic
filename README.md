@@ -1,6 +1,6 @@
 # Markov Chain
 
-![Cadenas de markov - Music Generator](https://imgur.com/a/O2oIHo3)
+![Cadenas de markov - Music Generator](./markov.JPG)
 
 Un generador de música, pulsa cualquier letra o aumenta la velocidad y empieza la melodía. 
 
