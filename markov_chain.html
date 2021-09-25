@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Markov Chain - Generator Music </title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+  <h1 style="display: flex; align-items: center; justify-content: center; margin-right:5%; margin-bottom:1em; margin-top:1em;">Cadenas de Markov</h1>
+  <div class="keys" style="position: flex; top:0%; left:15%;">
+    <div data-key="65" class="key">
+      <kbd>DO</kbd>
+      <span class="sound">DO</span>
+    </div>
+    <div data-key="83" class="key">
+      <kbd>REB</kbd>
+      <span class="sound">REB</span>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>RE</kbd>
+      <span class="sound">RE</span>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>MIB</kbd>
+      <span class="sound">MIB</span>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>MI</kbd>
+      <span class="sound">MI</span>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>FA</kbd>
+      <span class="sound">FA</span>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>SOL</kbd>
+      <span class="sound">SOL</span>
+    </div>
+    <div data-key="13" class="key finish">
+      <kbd>ENTER</kbd>
+      <span class="sound">Empezar de nuevo</span>
+    </div>
+  </div>
+
+   <p><b class="keys" style="margin:0em 18.88em; padding:0; font-size:2em; font-weight:700; color:rgb(0, 45, 141);">Pulsa cualquier letra</b></p>
+   <table id="table_notes">
+     <tbody>
+       <thead>
+         <tr>
+           <th>Estados</th>
+           <th>Do</th>
+           <th>Reb</th>
+           <th>Re</th>
+           <th>Mib</th>
+           <th>Mi</th>
+           <th>Fa</th>
+           <th>Sol</th>
+         </tr>
+       </thead>
+
+       <tr>
+         <td class="states">Do</td>
+         <td id="item_11">0.386</td>
+         <td id="item_12">0.147</td>
+         <td id="item_13">0.202</td>
+         <td id="item_14">0.062</td>
+         <td id="item_15">0.140</td>
+         <td id="item_16">0.047</td>
+         <td id="item_17">0.016</td>
+       </tr>
+       <tr>
+         <td class="states">Reb</td>
+         <td id="item_21">0.107</td>
+         <td id="item_22">0.267</td>
+         <td id="item_23">0.227</td>
+         <td id="item_24">0.120</td>
+         <td id="item_25">0.207</td>
+         <td id="item_26">0.052</td>
+         <td id="item_27">0.020</td>
+       </tr>
+       <tr>
+         <td class="states">Re</td>
+         <td id="item_31">0.035</td>
+         <td id="item_32">0.101</td>
+         <td id="item_33">0.188</td>
+         <td id="item_34">0.191</td>
+         <td id="item_35">0.357</td>
+         <td id="item_36">0.067</td>
+         <td id="item_37">0.061</td>
+       </tr>
+       <tr>
+         <td class="states">Mib</td>
+         <td id="item_41">0.021</td>
+         <td id="item_42">0.039</td>
+         <td id="item_43">0.112</td>
+         <td id="item_44">0.212</td>
+         <td id="item_45">0.431</td>
+         <td id="item_46">0.124</td>
+         <td id="item_47">0.061</td>
+       </tr>
+       <tr>
+         <td class="states">Mi</td>
+         <td id="item_51">0.009</td>
+         <td id="item_52">0.024</td>
+         <td id="item_53">0.075</td>
+         <td id="item_54">0.123</td>
+         <td id="item_55">0.473</td>
+         <td id="item_56">0.171</td>
+         <td id="item_57">0.125</td>
+       </tr>
+       <tr>
+         <td class="states">Fa</td>
+         <td id="item_61">0.000</td>
+         <td id="item_62">0.103</td>
+         <td id="item_63">0.041</td>
+         <td id="item_64">0.088</td>
+         <td id="item_65">0.391</td>
+         <td id="item_66">0.312</td>
+         <td id="item_67">0.155</td>
+       </tr>
+
+       <tr>
+         <td class="states">Sol</td>
+         <td id="item_71">0.000</td>
+         <td id="item_72">0.008</td>
+         <td id="item_73">0.036</td>
+         <td id="item_74">0.083</td>
+         <td id="item_75">0.364</td>
+         <td id="item_76">0.235</td>
+         <td id="item_77">0.274</td>
+       </tr>
+     </tbody>
+   </table>
+   
+   <div id="result">
+   </div>
+   <div id="secuencia" style="margin-top:0;"></div>
+  <script>
+    const notes = [{
+        nota: "do",
+        frecuency: 130.8227,
+        estado: 1,
+        keynote: 65,
+      },
+      {
+        nota: "reb",
+        frecuency: 138.6013,
+        estado: 2,
+        keynote: 83
+      },
+
+      {
+        nota: "re",
+        frecuency: 146.9223,
+        estado: 3,
+        keynote: 68
+      },
+      {
+        nota: "mib",
+        frecuency: 155.6034,
+        estado: 4,
+        keynote: 70
+      },
+
+      {
+        nota: "mi",
+        frecuency: 164.9037,
+        estado: 5,
+        keynote: 71
+      },
+      {
+        nota: "fa",
+        frecuency: 174.8541,
+        estado: 6,
+        keynote: 72
+      },
+      {
+        nota: "sol",
+        frecuency: 196.9977,
+        estado: 7,
+        keynote: 75
+      },
+    ]
+  </script>
+
+  <script>
+    alert('Pulsa cualquier botón para iniciar');
+
+    function removeTransition(e) {
+      if (e.propertyName !== 'transform') return;
+      e.target.classList.remove('playing');
+     }
+
+     function playNote(fq) {
+      audioCtx = new AudioContext();
+      let oscilator = audioCtx.createOscillator();
+      let gainNode = audioCtx.createGain();
+      gainNode.gain.value = 0.15 // 12 % sound
+      oscilator.connect(gainNode);
+      oscilator.type = "sawtooth";
+      oscilator.frequency.value = fq;
+      gainNode.connect(audioCtx.destination);
+      oscilator.start(0);
+      gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.685);
+      setInterval(1000);
+    }
+
+    let tabla = [];
+
+    function markovChain(){
+           let transition_matrix = [ [0.386, 0.147, 0.202, 0.062, 0.140, 0.047, 0.016],
+           [ 0.107, 0.267, 0.227, 0.120, 0.207, 0.052, 0.020],
+           [ 0.035, 0.101, 0.188, 0.191, 0.357, 0.067, 0.061],
+           [ 0.021, 0.039, 0.112, 0.212, 0.431, 0.124, 0.061],
+           [ 0.009, 0.024, 0.075, 0.123, 0.473, 0.171, 0.125],
+           [ 0.000, 0.103, 0.041, 0.088, 0.391, 0.312, 0.155],
+           [ 0.000, 0.008, 0.036, 0.083, 0.364, 0.235, 0.274]
+           ];
+        // Número de estados
+        let N = 7;
+        let estado = N - 1; // Estado actual
+        let pasos = 0; // Steps
+        let states = []; // Estados
+        while(estado > 0){
+          pasos++;
+          let uniform_value = Math.random();
+          let sum = 0;
+
+          for(let j = 0; j<N ;j++){
+            sum+= transition_matrix[estado][j];
+            if(uniform_value <= sum){
+              console.log("estado", estado, "j", j+1);
+
+              let lugar = {
+                  estado: estado+1,
+                  columna: j + 1,
+                  probalidad: transition_matrix[estado][j],
+              }
+
+              tabla.push(lugar);
+
+              estado = j;
+              states.push(estado);
+              break;
+            }
+          }
+        }
+        return states; 
+    }
+
+      let estados = markovChain();
+      const iterator = music_notes(0);
+      console.log(tabla, "TABLA");
+
+      function playSound(e){
+      const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+      const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
+      const res = document.getElementById(`result`);
+          setInterval(function () {
+          let objState = iterator.next().value;
+          if(objState !== null && objState !== undefined){
+                let num = objState.state;
+                let numNote = objState.index;
+                let indexTable = numNote - 1;
+                console.log(numNote, "INDEX", num, "estado", estados.length, "pasos", "nota: ", notes[num].nota);
+                /** Style table **/  
+                let state = tabla[indexTable].estado;
+                let columna = tabla[indexTable].columna;
+                let prob = tabla[indexTable].probalidad;
+                console.log("state:",state, "columna", columna,"prob" ,prob);
+                let tr = document.getElementById(`item_${state.toString()+columna.toString()}`);
+                tr.classList.add("fondo_item");
+                tr.innerHTML += ` ${numNote}`;
+                console.log(tr, "tr");
+                /** End of style table **/
+                playNote(notes[num].frecuency);
+                var e = jQuery.Event("keydown");
+                e.which = notes[num].keynote;
+                res.appendChild(document.createTextNode(` #${numNote} ${notes[num].nota} (${prob}),`));
+                key3 = document.querySelector(`div[data-key="${notes[num].keynote}" ]`);
+                key3.classList.add('playing');
+          }else{
+            return;
+          }
+          },1000);
+      if (e.keyCode === 13) {
+        location.reload();
+      }
+    }
+
+    function* music_notes(i) {
+    while (i < estados.length) { 
+      yield {state: estados[i++], index: i}; 
+    } 
+   }
+    const keys = Array.from(document.querySelectorAll('.key'));
+    keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+    window.addEventListener('keydown', playSound);
+    let secuencia = document.getElementById("secuencia");
+    secuencia.innerHTML += "Melodía: <br />"
+    secuencia.innerHTML += "<br />";
+    for(let i=0;i<estados.length;i++){
+      for(let j = 0; j < notes.length; j++){
+        
+        if(notes[j].estado == estados[i]){
+          secuencia.appendChild(document.createTextNode(notes[j+1].nota + ","));
+          if(i+1 == estados.length-1){
+              secuencia.appendChild(document.createTextNode("do"));
+          }
+         if(j % 4 == 0){
+          secuencia.innerHTML += "<br />";
+          console.log("entra?")
+         }
+        }
+      }
+    }
+     secuencia.innerHTML += `<div id='pasos'"><span style="color:white; font-weight:700;">Pasos:</span> ${estados.length}
+       <div />`;
+
+  </script>
+</body>
+</html>
